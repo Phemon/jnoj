@@ -11,7 +11,7 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
 <div class="row blog">
     <div class="col-md-8">
         <div class="jumbotron">
-            <h1>ZYW AK IOI</h1>
+            <p id="hitokoto">:D 获取中...</p>
             <p>Welcome to <?= Yii::$app->setting->get('ojName') ?> Online Judge</p>
         </div>
         <hr>
@@ -65,4 +65,5 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
             </div>
         <?php endif; ?>
     </div>
+    <script src="https://v1.hitokoto.cn/?encode=js&select=%23hitokoto" defer></script>
 </div>
