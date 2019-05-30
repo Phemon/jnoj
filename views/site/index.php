@@ -12,8 +12,6 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
     <div class="col-md-8">
         <div class="jumbotron">
             <h2>欢迎访问石家庄二中OJ</h2>
-            <h4>更新</h4>
-            <p>增加一言</p>
         </div>
         <hr>
         <div class="blog-main">
