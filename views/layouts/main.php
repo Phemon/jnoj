@@ -48,7 +48,7 @@ AppAsset::register($this);
     </header>
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->setting->get('ojName') . ' OJ',
+        'brandLabel' => 'EZOJ',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-default',
