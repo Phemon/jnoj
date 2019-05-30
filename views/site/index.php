@@ -11,7 +11,7 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
 <div class="row blog">
     <div class="col-md-8">
         <div class="jumbotron">
-            <h1>Hello, world!</h1>
+            <h1>ZYW AK IOI</h1>
             <p>Welcome to <?= Yii::$app->setting->get('ojName') ?> Online Judge</p>
         </div>
         <hr>
