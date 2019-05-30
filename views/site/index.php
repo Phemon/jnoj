@@ -12,8 +12,8 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
     <div class="col-md-8">
         <div class="jumbotron">
             <h2>欢迎访问石家庄二中OJ</h2>
-            <p>内网地址:http://inoj.seinf.org 或 192.168.14.150</p>
-            <p>外网地址:http://oj.seinf.org:8080</p>
+            <a href="http://inoj.seinf.org">内网地址:http://inoj.seinf.org 或 192.168.14.150</a>
+            <a href="http://oj.seinf.org:8080">外网地址:http://oj.seinf.org:8080</a>
             <p>在校内请使用内网地址，外网避免大量下载数据</p>
         </div>
         <hr>
