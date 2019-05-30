@@ -33,8 +33,10 @@ AppAsset::register($this);
         <div class="container">
             <div class="page-header">
                 <div class="logo pull-left">
-                    <div class="brand">
-                        SJZEZ
+                    <div class="pull-left">
+                        <a class="navbar-brand" href="<?= Yii::$app->request->baseUrl ?>">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/logo.png" />
+                        </a>
                     </div>
                     <div class="brand">
                         Online Judge
