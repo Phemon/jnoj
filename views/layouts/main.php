@@ -33,11 +33,8 @@ AppAsset::register($this);
         <div class="container">
             <div class="page-header">
                 <div class="logo pull-left">
-                    <div class="pull-left">
-                            <h3>SJZEZ</h3>
-                    </div>
                     <div class="brand">
-                        Online Judge
+                        SJZEZ Online Judge
                     </div>
                 </div>
                 <div class="clearfix"></div>
