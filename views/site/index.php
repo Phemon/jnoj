@@ -65,5 +65,5 @@ $this->title = Yii::$app->setting->get('ojName') . ' Online Judge';
             </div>
         <?php endif; ?>
     </div>
-    <script src="https://v1.hitokoto.cn/?c=d&encode=js&select=%23hitokoto" defer></script>
+    <script src="https://v1.hitokoto.cn/?c=d&encode=json" defer></script>
 </div>
