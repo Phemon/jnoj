@@ -116,7 +116,7 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; 石家庄二中OJ <?= date('Y') ?></p>
-        <p>Source from shi-yang/jnoj. Edited and managed by Phemon.</p>
+        <p></br>Source from shi-yang/jnoj. Edited and managed by Phemon.</p>
     </div>
 </footer>
 
