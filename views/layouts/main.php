@@ -42,6 +42,13 @@ AppAsset::register($this);
                         Online Judge
                     </div>
                 </div>
+                <div class="logo pull-right">
+                    <div class="pull-rih=ght">
+                        <a class="navbar-brand" href="http://www.sjzez.com">
+                            <img src="<?= Yii::getAlias('@web') ?>/images/xx.png" />
+                        </a>
+                    </div>
+                </div>
                 <div class="clearfix"></div>
             </div>
         </div>
