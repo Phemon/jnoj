@@ -132,7 +132,6 @@ class Group extends ActiveRecord
                 ':gid' => $this->id
             ])->queryScalar();
             $a = $cache->set($key, $data, 7200);
-            print_r($a);
         }
         $data = $cache->get($key);
         $data = $cache->get($key);
