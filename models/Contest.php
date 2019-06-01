@@ -711,10 +711,13 @@ class Contest extends \yii\db\ActiveRecord
         }
         // 小组成员
         if ($this->group_id != 0) {
-            return Yii::$app->db->createCommand('SELECT count(*) FROM {{%group_user}} WHERE user_id=:uid AND group_id=:gid', [
+            $role = Yii::$app->db->createCommand('SELECT role FROM {{%group_user}} WHERE user_id=:uid AND group_id=:gid', [
                 ':uid' => Yii::$app->user->id,
                 ':gid' => $this->group_id
             ])->queryScalar();
+            if ($role == GroupUser::ROLE_MEMBER || $role == GroupUser::ROLE_MANAGER || $role == GroupUser::ROLE_LEADER) {
+                return true;
+            }
         }
         return false;
     }
@@ -746,5 +749,29 @@ class Contest extends \yii\db\ActiveRecord
     {
        return !empty($this->lock_board_time) && strtotime($this->lock_board_time) <= time() &&
            time() <= strtotime($this->end_time) + Yii::$app->setting->get('scoreboardFrozenTime');
+    }
+
+    /**
+     * 是否可以编辑比赛信息
+     */
+    public function isContestAdmin() {
+        if (Yii::$app->user->isGuest) {
+            return false;
+        }
+        // 管理员
+        if (Yii::$app->user->identity->isAdmin()) {
+            return true;
+        }
+        // 创建人
+        if ($this->id == Yii::$app->user->id) {
+            return true;
+        }
+        // 小组管理员
+        if (!empty($this->group_id)) {
+            if ($this->group->hasPermission()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
