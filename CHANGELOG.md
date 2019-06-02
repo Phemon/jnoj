@@ -34,6 +34,10 @@ JNOJ Change Log
 - Enh: [web] 管理员可查看所有小组
 - Enh: [web] 改进 OI 榜单的显示
 - Enh: [web、polygon] 改进 polygon。需要重新对 polygon 进行编译。
+- Enh: [web] 比赛结束五分钟后开放提交
+- Bug: [web] 比赛页面切换题目不出现复制按钮
+- Enh: [web] 当比赛仅参赛人员可见时，隐藏比赛所有信息
+- Enh: [web] 支持比赛任意题目的删除
 
 0.8.0 2019.3.3
 ------------------

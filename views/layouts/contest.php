@@ -98,7 +98,7 @@ $status = $model->getRunStatus();
                 <div class="col-md-6 text-center">
                     <h2 class="contest-title">
                         <?= Html::encode($model->title) ?>
-                        <?php if ($model->isContestAdmin()): ?>
+                        <?php if ($model->group_id != 0 && $model->isContestAdmin()): ?>
                             <small>
                                 <?= Html::a('<span class="glyphicon glyphicon-cog"></span> ' . Yii::t('app', 'Setting'),
                                     ['/homework/update', 'id' => $model->id]) ?>
@@ -235,7 +235,7 @@ $status = $model->getRunStatus();
     $(document).ready(function () {
         // 连接服务端
         var socket = io(document.location.protocol + '//' + document.domain + ':2120');
-        var uid = <?= Yii::$app->user->isGuest ? session_id() : Yii::$app->user->id ?>;
+        var uid = '<?= Yii::$app->user->isGuest ? session_id() : Yii::$app->user->id ?>';
         // 连接后登录
         socket.on('connect', function(){
             socket.emit('login', uid);
