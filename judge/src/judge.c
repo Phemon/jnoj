@@ -92,8 +92,8 @@ typedef struct { // 记录每个数据点测试状态
 
 typedef struct subtask_s {
     int score; // 子任务的分数
-    int test_count; // 子任务的数据点个数。最大 256
-    char test_input_name[256][NAME_MAX];
+    int test_count; // 子任务的数据点个数。最大 1000
+    char *test_input_name[1000];
     struct subtask_s * next;
 } subtask_struct;
 
@@ -336,13 +336,18 @@ void update_solution(int solution_id, int result, int time, int memory,
 
 void update_solution_info(int solution_id, char * buf)
 {
-    char sql[(1 << 16)];
+    int len = strlen(buf);
+    char *sql = (char *)malloc(sizeof(char) * (len + len + 1024));
+    char *tmp = (char *)malloc(sizeof(char) * (len + len + 1024));
+    mysql_real_escape_string(conn, tmp, buf, strlen(buf));
     sprintf(sql,
             "INSERT INTO `solution_info`(`solution_id`, `run_info`) VALUES(%d, '%s') "
             "ON DUPLICATE KEY UPDATE `run_info`='%s'",
-            solution_id, buf, buf);
+            solution_id, tmp, tmp);
     if (mysql_real_query(conn, sql, strlen(sql)))
         write_log(mysql_error(conn));
+    free(sql);
+    free(tmp);
 }
 
 void addceinfo(int solution_id)
@@ -433,7 +438,7 @@ int compile(int lang, char * work_dir)
 #endif
             execute_cmd("mount -o bind /etc/alternatives etc/alternatives");
             execute_cmd("mount -o remount,ro etc/alternatives");
-            execute_cmd("mount -o bind /proc proc");
+            execute_cmd("mount -t proc /proc proc");
             execute_cmd("mount -o remount,ro proc");
             chroot(work_dir);
         }
@@ -929,7 +934,7 @@ void watch_solution(problem_struct problem,
         //sig = status >> 8;/*status >> 8 EXITCODE*/
         if (WIFEXITED(status))
             break;
-        if ((lang == LANG_C || lang == LANG_CPP) && get_file_size("error.out")) {
+        if ((lang == LANG_C || lang == LANG_CPP) && get_file_size("error.out") && !oi_mode) {
             verdict_res->verdict = OJ_RE;
             ptrace(PTRACE_KILL, pidApp, NULL, NULL);
             break;
@@ -1167,7 +1172,6 @@ subtask_struct * read_oi_mode_substask_configfile(char * configfile_path)
     head->next = NULL;
     while (fgets(buf, BUFFER_SIZE - 1, fp)) {
         char name_prefix[NAME_MAX] = {0};
-        char tmp_name[NAME_MAX] = {0};
         int begin = 0, end = 0, score = 0;
         int i = 0, j = 0;
         int found_num = 0;
@@ -1228,11 +1232,12 @@ subtask_struct * read_oi_mode_substask_configfile(char * configfile_path)
         subtask_node->score = score;
         if (found_num) {
             for (i = begin, j = 0; i <= end; i++, j++) {
-                sprintf(tmp_name, "%s%d.in", name_prefix, i);
-                strcpy(subtask_node->test_input_name[j], tmp_name);
+                subtask_node->test_input_name[j] = (char *)malloc(sizeof(char) * NAME_MAX);
+                snprintf(subtask_node->test_input_name[j], NAME_MAX,"%s%d.in", name_prefix, i);
             }
         } else {
-            strcpy(subtask_node->test_input_name[j], name_prefix);
+            subtask_node->test_input_name[j] = (char *)malloc(sizeof(char) * NAME_MAX);
+            snprintf(subtask_node->test_input_name[j], NAME_MAX, "%s.in", name_prefix);
         }
         subtask_rear->next = subtask_node;
         subtask_rear = subtask_node; 
@@ -1401,8 +1406,10 @@ int main(int argc, char** argv)
         subtask_list = (subtask_struct *)malloc(sizeof(subtask_struct));
         subtask_list->next = (subtask_struct *)malloc(sizeof(subtask_struct));
         subtask_list->next->test_count = 0;
+        subtask_list->next->score = 0;
         subtask_list->next->next = NULL;
         for (int i = 0; i < test_total_count; i++) {
+            subtask_list->next->test_input_name[i] = (char *)malloc(sizeof(char) * (strlen(namelist[i]->d_name) + 1));
             strcpy(subtask_list->next->test_input_name[i], namelist[i]->d_name);
             subtask_list->next->test_count++;
             free(namelist[i]);

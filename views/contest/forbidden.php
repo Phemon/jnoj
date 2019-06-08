@@ -8,12 +8,12 @@ use app\models\Contest;
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Contest'), 'url' => ['/contest/index']];
-$this->params['breadcrumbs'][] = $this->title;
 $this->params['model'] = $model;
 ?>
 <?php if ($model->status == Contest::STATUS_PRIVATE): ?>
     <h2 class="text-center">该比赛仅参赛人员可见。</h2>
     <?php
+        $this->title = Yii::$app->setting->get('ojName');
         $this->params['model']->title = '';
         $this->params['model']->start_time = '';
         $this->params['model']->end_time = '';

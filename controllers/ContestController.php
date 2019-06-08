@@ -361,8 +361,11 @@ class ContestController extends Controller
 
     /**
      * 比赛榜单
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return string
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
      */
     public function actionStanding($id)
     {
@@ -371,8 +374,19 @@ class ContestController extends Controller
         if (!$model->canView()) {
             return $this->render('/contest/forbidden', ['model' => $model]);
         }
+        $showStandingBeforeEnd = 0;
+        if (Yii::$app->request->get('showStandingBeforeEnd')) {
+            $showStandingBeforeEnd = Yii::$app->request->get('showStandingBeforeEnd');
+        }
+        if ($showStandingBeforeEnd) {
+            $rankResult = $model->getRankData(true);
+        } else {
+            $rankResult = $model->getRankData(true, time());
+        }
         return $this->render('/contest/standing', [
-            'model' => $model
+            'model' => $model,
+            'rankResult' => $rankResult,
+            'showStandingBeforeEnd' => $showStandingBeforeEnd
         ]);
     }
 
@@ -395,8 +409,7 @@ class ContestController extends Controller
 
         if (!Yii::$app->user->isGuest && $solution->load(Yii::$app->request->post())) {
             // 判断是否已经参赛，提交即参加比赛
-            // 比赛结束后的提交不计入参赛人员
-            if ($model->getRunStatus() != Contest::STATUS_ENDED && !$model->isUserInContest()) {
+            if (!$model->isUserInContest()) {
                 Yii::$app->db->createCommand()->insert('{{%contest_user}}', [
                     'contest_id' => $model->id,
                     'user_id' => Yii::$app->user->id

@@ -85,11 +85,30 @@ class ProblemController extends Controller
             'searchModel' => $searchModel
         ]);
     }
-
+    
     public function actionDeletefile($id, $name)
     {
         $model = $this->findModel($id);
-        @unlink(Yii::$app->params['judgeProblemDataPath'] . $model->id . '/' . $name);
+        if ($name == 'in') {
+            $files = $model->getDataFiles();
+            foreach ($files as $file) {
+                if (strpos($file['name'], '.in')) {
+                    @unlink(Yii::$app->params['judgeProblemDataPath'] . $model->id . '/' . $file['name']);
+                }
+            }
+        } else if ($name == 'out') {
+            $files = $model->getDataFiles();
+            foreach ($files as $file) {
+                if (strpos($file['name'], '.out')) {
+                    @unlink(Yii::$app->params['judgeProblemDataPath'] . $model->id . '/' . $file['name']);
+                }
+                if (strpos($file['name'], '.ans')) {
+                    @unlink(Yii::$app->params['judgeProblemDataPath'] . $model->id . '/' . $file['name']);
+                }
+            }
+        } else {
+            @unlink(Yii::$app->params['judgeProblemDataPath'] . $model->id . '/' . $name);
+        }
         return $this->redirect(['test-data', 'id' => $model->id]);
     }
 
@@ -257,7 +276,7 @@ class ProblemController extends Controller
                     rename($dataOldName, $dataNewName);
                     Solution::updateAll(['problem_id' => $newID], ['problem_id' => $oldID]);
                     ContestProblem::updateAll(['problem_id' => $newID], ['problem_id' => $oldID]);
-                    Discuss::updateAll(['entity_id' => $newID], ['entity_id' => $newID, 'entity' => Discuss::ENTITY_PROBLEM]);
+                    Discuss::updateAll(['entity_id' => $newID], ['entity_id' => $oldID, 'entity' => Discuss::ENTITY_PROBLEM]);
                 }
                 $transaction->commit();
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Submitted successfully'));
@@ -387,7 +406,15 @@ class ProblemController extends Controller
             $fp = fopen($dataPath . '/spj.cc',"w");
             fputs($fp, $spjContent);
             fclose($fp);
-            exec("g++ -fno-asm -std=c++11 -O2 {$dataPath}/spj.cc -o {$dataPath}/spj -I" . Yii::getAlias('@app/libraries'));
+            putenv('PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin');
+            $cmd = "/usr/bin/g++ -fno-asm -std=c++11 -O2 {$dataPath}/spj.cc -o {$dataPath}/spj -I" . Yii::getAlias('@app/libraries');
+            exec($cmd . ' 2>&1', $compileInfo, $compileRes);
+            if ($compileRes) {
+                Yii::$app->session->setFlash('error', '编译失败:' . implode("\n", $compileInfo));
+            } else {
+                Yii::$app->session->setFlash('success', '保存成功');
+            }
+            return $this->refresh();
         }
 
         return $this->render('spj', [

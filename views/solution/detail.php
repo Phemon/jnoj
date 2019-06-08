@@ -108,6 +108,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $json = $model->solutionInfo->run_info;
 $json = str_replace(PHP_EOL,"<br>",$json);
+$json = str_replace("\\n","<br>",$json);
+$json = str_replace("'","\'",$json);
 $oiMode = Yii::$app->setting->get('oiMode');
 $verdict = $model->result;
 $CE = Solution::OJ_CE;
@@ -119,7 +121,7 @@ var CE = $CE;
 
 var json = '$json';
 if (verdict != CE) {
-    json = eval('(' + json + ')');
+    json = JSON.parse(json);
     var subtasks = json.subtasks;
     var testId = 1;
     for (var i = 0; i < subtasks.length; i++) {

@@ -5,12 +5,12 @@ use yii\helpers\Url;
 use yii\bootstrap\Modal;
 
 /* @var $model app\models\Contest */
+/* @var $rankResult array */
 
 $problems = $model->problems;
-$rank_result = $model->getRankData();
-$first_blood = $rank_result['first_blood'];
-$result = $rank_result['rank_result'];
-$submit_count = $rank_result['submit_count'];
+$first_blood = $rankResult['first_blood'];
+$result = $rankResult['rank_result'];
+$submit_count = $rankResult['submit_count'];
 ?>
 <?php if ($model->isScoreboardFrozen()): ?>
     <p>现已是封榜状态，榜单将不再实时更新，待赛后再揭晓</p>
@@ -79,15 +79,15 @@ $submit_count = $rank_result['submit_count'];
                     } else {
                         $css_class = 'solved';
                     }
-                    $num = $rank['ce_count'][$p['problem_id']] + $rank['wa_count'][$p['problem_id']] + 1;
+                    $num = $rank['wa_count'][$p['problem_id']] + 1;
                     $time = intval($rank['ac_time'][$p['problem_id']]);
                 } else if (isset($rank['pending'][$p['problem_id']]) && $rank['pending'][$p['problem_id']]) {
-                    $num = $rank['ce_count'][$p['problem_id']] + $rank['wa_count'][$p['problem_id']] + $rank['pending'][$p['problem_id']];
+                    $num = $rank['wa_count'][$p['problem_id']] + $rank['pending'][$p['problem_id']];
                     $css_class = 'pending';
                     $time = '';
                 } else if (isset($rank['wa_count'][$p['problem_id']])) {
                     $css_class = 'attempted';
-                    $num = $rank['ce_count'][$p['problem_id']] + $rank['wa_count'][$p['problem_id']];
+                    $num =  $rank['wa_count'][$p['problem_id']];
                     $time = '';
                 }
                 if ($num == 0) {

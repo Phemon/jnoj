@@ -7,7 +7,7 @@ JNOJ Change Log
 
 请阅读 [update.md](https://github.com/shi-yang/jnoj/blob/master/docs/update.md) 来获取更新方法。
 
-0.9.0 2019.5.31 (under development)
+0.9.0 2019.6.6 (under development)
 ------------------
 - Enh: [web、judge、db] 支持 OI 判题模式。**不兼容更新，更新后需要到后台设置页面修改oj名称、学校名称**
 - Enh: [web] 私有比赛、作业模式。将比赛设为私有时，任何时候均只能由参赛用户访问。
@@ -38,6 +38,10 @@ JNOJ Change Log
 - Bug: [web] 比赛页面切换题目不出现复制按钮
 - Enh: [web] 当比赛仅参赛人员可见时，隐藏比赛所有信息
 - Enh: [web] 支持比赛任意题目的删除
+- Bug: [web] polygon 全部删除输入输出文件
+- Bug: [web、polygon] polygon 无法根据标程出数据。需要重新对 polygon 进行编译。
+- Enh: [web] 显示比赛结束后的榜单
+- Bug: [web] 比赛结束后的提交导致榜单页面出错
 
 0.8.0 2019.3.3
 ------------------
