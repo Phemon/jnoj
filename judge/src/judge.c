@@ -1022,23 +1022,23 @@ void watch_solution(problem_struct problem,
         // WSTOPSIG: get the signal if it was stopped by signal
 
         // check the system calls
-//         ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
-//         call_id = (unsigned int)reg.REG_SYSCALL % CALL_ARRAY_SIZE;
-//         if (call_counter[call_id]) {
-//             //call_counter[reg.REG_SYSCALL]--;
-//         } else if (record_call) {
-//             call_counter[call_id] = 1;
-//         } else { //do not limit JVM syscall for using different JVM
-//             verdict_res->verdict = OJ_RE;
-//             char error[BUFFER_SIZE];
-//             sprintf(error, "[ERROR] A not allowed system call.\nCall ID:%u",
-//                 call_id);
-//             write_log(error);
-//             print_runtimeerror(error);
-//             ptrace(PTRACE_KILL, pidApp, NULL, NULL);
-//         }
-//         ptrace(PTRACE_SYSCALL, pidApp, NULL, NULL);
-//         first_run = false;
+        ptrace(PTRACE_GETREGS, pidApp, NULL, &reg);
+        call_id = (unsigned int)reg.REG_SYSCALL % CALL_ARRAY_SIZE;
+        if (call_counter[call_id]) {
+            //call_counter[reg.REG_SYSCALL]--;
+        } else if (record_call) {
+            call_counter[call_id] = 1;
+        } else { //do not limit JVM syscall for using different JVM
+            verdict_res->verdict = OJ_RE;
+            char error[BUFFER_SIZE];
+            sprintf(error, "[ERROR] A not allowed system call.\nCall ID:%u",
+                call_id);
+            write_log(error);
+            print_runtimeerror(error);
+            ptrace(PTRACE_KILL, pidApp, NULL, NULL);
+        }
+        ptrace(PTRACE_SYSCALL, pidApp, NULL, NULL);
+        first_run = false;
     }
     verdict_res->time += (ruse.ru_utime.tv_sec * 1000 + ruse.ru_utime.tv_usec / 1000);
     verdict_res->time += (ruse.ru_stime.tv_sec * 1000 + ruse.ru_stime.tv_usec / 1000);
